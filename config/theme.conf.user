@@ -1,0 +1,9 @@
+# Meine Anpassungen für das tokyo-night-sddm theme.
+# copy this file to /usr/share/sddm/themes/tokyo-night-sddm
+
+[General]
+
+Background="Backgrounds/path.png"
+HourFormat="HH:mm"
+DateFormat="dddd  d. MMMM"
+HeaderText="Hallo!"
