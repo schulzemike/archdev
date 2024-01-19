@@ -6,9 +6,6 @@ packages=(
   man-pages
   neovim
   pkgfile
-  xclip
-  xorg-apps
-  xorg-server
 )
 
 echo -e "\n######################################################"
@@ -18,7 +15,7 @@ sed -i -z "s/#\[multilib\]\n#/\[multilib\]\n/" /etc/pacman.conf
 
 
 grep arcolinux_repo /etc/pacman.conf >/dev/null
-if [[ $? != 0 ]]; then
+if [[ $? -ne 0 ]]; then
 cat <<EOT >> /etc/pacman.conf
 
 [arcolinux_repo]
@@ -39,6 +36,8 @@ EOT
 else
   echo "Arcolinux mirrors have already been added in the past"
 fi
+
+
 echo -e "\n################################################"
 echo "Updating system..."
 pacman -Syyu --noconfirm
@@ -50,7 +49,7 @@ fi
 
 
 pacman -Syu --noconfirm
-if [ $? == 0 ]; then
+if [[ $? -eq 0 ]]; then
   echo -e "System has been updated.\n"
 else
   exit 1

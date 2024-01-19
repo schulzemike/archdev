@@ -4,7 +4,7 @@
 echo -e "\n################################################"
 echo "Installing pikaur..."
 which pikaur > /dev/null 2>&1 
-if [ $? == 1 ]; then
+if [[ $? -ne 0 ]]; then
   sudo -u vagrant /bin/bash <<EOF
     id
 	git clone https://aur.archlinux.org/pikaur.git /tmp/pikaur
