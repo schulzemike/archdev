@@ -19,7 +19,7 @@ else
     /usr/bin/useradd --create-home --user-group $USER_NAME
     echo -e 'changeme\nchangeme' | /usr/bin/passwd $USER_NAME
 	
-	echo "$USER_NAME ALL=(ALL) ALL" >> /etc/sudoers.d/10_$USER_NAME
+	echo "$USER_NAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/10_$USER_NAME
 	mkdir $HOME_DIR/.ssh
 
     # echo "Creating GitHub RSA Key..."
@@ -40,7 +40,8 @@ fi
 # Initialize the .dotfiles repo as the created user - see: https://wiki.archlinux.org/title/Dotfiles
 GIT_DIR=$HOME_DIR/.dotfiles
 
-if [[ ! -d $GIT_DIR ]]; then
+if [[ ! -d $GIT_DIR ]
+]; then
 	su -c "/usr/bin/git init --initial-branch=main --bare $GIT_DIR" $USER_NAME
 	su -c "/usr/bin/git --git-dir=$GIT_DIR --work-tree=$HOME_DIR config status.showUntrackedFiles no" $USER_NAME
 	su -c "/usr/bin/git --git-dir=$GIT_DIR --work-tree=$HOME_DIR config user.email $EMAIL" $USER_NAME
