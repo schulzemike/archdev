@@ -5,7 +5,42 @@ echo
 echo "Installing xorg, qtile and sddm"
 echo
 USER_PERMISSIONS="mike:mike"
-NERD_FONTS_VERSION="v3.1.1"
+
+function createDirIfNotExist() {
+	if [[ $# -ne 1 ]]; then
+		echo "Provide the name of the directory" >&2
+		exit 1
+	fi
+
+	[[ -d $1 ]] || mkdir $1
+}
+
+function downloadNerdFont() {
+
+    NERD_FONTS_VERSION="v3.1.1"
+	SYSTEM_FONT_DIR="/usr/local/share/fonts"
+	
+	if [[ $# -ne 1 ]]; then
+		echo "Provide the name of the font" >&2
+		exit 1
+	fi
+
+	createDirIfNotExist $SYSTEM_FONT_DIR
+	
+	FONT=$1
+		
+	if [[ ! -d $SYSTEM_FONT_DIR/$FONT ]]; then
+		wget -q -O /tmp/$FONT.zip https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION/$FONT.zip && unzip -q -d $SYSTEM_FONT_DIR/$FONT /tmp/$FONT.zip && rm /tmp/$FONT.zip
+		if [[ $? -ne 0 ]]; then
+			echo "Could not download the font: $FONT" >&2
+			exit 1
+		fi
+		echo "Successfully installed the font: $FONT"
+	fi
+	return 0
+}
+
+
 
 pacman -R --noconfirm virtualbox-guest-utils-nox 2>/dev/null
 
@@ -29,22 +64,25 @@ aur_packages=(
   sddm-theme-tokyo-night
   archlinux-logout-git
 )
-echo "###################################################################"
+echo -e "\n###################################################################"
 echo "Installing packages"
 /usr/bin/pacman -S --noconfirm --needed "${packages[@]}"
 
-echo "###################################################################"
+echo -e "\n###################################################################"
 echo "Installing aur packages"
 pikaur -S --noconfirm --needed "${aur_packages[@]}"
 
 
-echo -e "\nInstalling and configuring sddm"
+#
 # SDDM
+#
+echo -e "\nInstalling and configuring sddm"
+
 /usr/bin/systemctl enable sddm
 SDDM_CONF_DIR=/etc/sddm.conf.d
-if [[ ! -d $SDDM_CONF_DIR ]]; then
-  mkdir $SDDM_CONF_DIR
-fi
+
+createDirIfNotExist $SDDM_CONF_DIR
+
 # only set the new SDDM them if the conf-file has not yet been created
 if [[ ! -f $SDDM_CONF_DIR/custom.conf ]]; then
   $SDDM_CONF_DIR/custom.conf
@@ -55,8 +93,11 @@ if [[ ! -f $SDDM_CONF_DIR/custom.conf ]]; then
   cp /vagrant/config/theme.conf.user /usr/share/sddm/themes/tokyo-night-sddm/
 fi
 
+
+#
 # qtile adjustments
 #
+
 # remove the wayland session from the sddm launcher
 rm /usr/share/wayland-sessions/qtile-wayland.desktop 2>/dev/null
 
@@ -64,29 +105,31 @@ rm /usr/share/wayland-sessions/qtile-wayland.desktop 2>/dev/null
 sed -i -z "s/qtile start\n/qtile start -c \".config\/qtile\/myconfig.py\"\n/" /usr/share/xsessions/qtile.desktop
 
 
-
-# Spracheinstellungen
+#
+# Language settings
+#
 echo LANG=de_DE.UTF-8 > /etc/locale.conf
 echo KEYMAP=de-latin1 > /etc/vconsole.conf
 rm /etc/localtime && ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 localectl set-keymap de-latin1
-# localectl --no-convert set-x11-keymap de pc105
 
+
+#
 # Fonts
-if [[ ! -d /usr/local/share/fonts ]]; then
-    mkdir /usr/local/share/fonts
-fi
+#
+downloadNerdFont "JetBrainsMono"
+downloadNerdFont "Noto"
 
-if [[ ! -d /usr/local/share/fonts/JetBrainsMono ]]; then
-    wget -q -O /tmp/JetBrainsMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_FONTS_VERSION/JetBrainsMono.zip && unzip -q -d /usr/local/share/fonts/JetBrainsMono /tmp/JetBrainsMono.zip && rm /tmp/JetBrainsMono.zip
-fi
 
+#
 # Bash relevant packages
+#
 /usr/bin/pacman -S --noconfirm --needed bash-completion
 
 
-
+#
 # Rofi Launcher
+#
 /usr/bin/pacman -S --noconfirm --needed rofi
 ROFI_CONFIG_DIR="/home/mike/.config/rofi"
 if [[ ! -d $ROFI_CONFIG_DIR ]]; then
@@ -96,6 +139,8 @@ if [[ ! -d $ROFI_CONFIG_DIR ]]; then
 fi
 
 
+#
 # Browser
+#
 /usr/bin/pikaur -Syu --noconfirm --needed google-chrome noto-fonts-emoji
 
