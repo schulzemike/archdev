@@ -14,6 +14,11 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "archlinux/archlinux"
 
+  # This might be activated after the first run. The public key will be copied during 
+  # the provision of the base packages.
+  # config.ssh.private_key_path = "vagrant-ssh/id_rsa"												   
+  
+  
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -67,9 +72,15 @@ Vagrant.configure("2") do |config|
     vb.memory = "15000"
 	vb.cpus = 2
     vb.name = "ArchDev"		
+
+	vb.customize ["modifyvm", :id, "--monitorcount", 2]
+	
     vb.customize ["modifyvm", :id, "--vram", "128"]
 	vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
-	
+
+	vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+	vb.customize ["modifyvm", :id, "--drag-and-drop", "bidirectional"]
+
 	vb.customize ["modifyvm", :id, "--natnet1", "10.10.0/24"]											
   end
   #
@@ -88,4 +99,11 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "provision/02_pikaur.sh"
   config.vm.provision "shell", path: "provision/03_create_user.sh"
   config.vm.provision "shell", path: "provision/04_qtile_and_tools.sh"
+  config.vm.provision "shell", path: "provision/05_tooling.sh"
+  
+  config.vm.provision "shell", inline: <<-SCRIPT
+echo "--------------------------------------------------"
+echo "--- machine has been successfully provisioned. ---"
+echo "--------------------------------------------------"  
+SCRIPT
 end

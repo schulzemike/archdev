@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 echo -e "\n###################################################################"
 echo
 echo "Creating user"
@@ -19,7 +19,7 @@ else
     /usr/bin/useradd --create-home --user-group $USER_NAME
     echo -e 'changeme\nchangeme' | /usr/bin/passwd $USER_NAME
 	
-	echo "$USER_NAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/10_$USER_NAME
+	echo "$USER_NAME ALL=(ALL) ALL" >> /etc/sudoers.d/10_$USER_NAME
 	mkdir $HOME_DIR/.ssh
 
     # echo "Creating GitHub RSA Key..."

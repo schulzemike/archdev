@@ -1,4 +1,7 @@
 #!/bin/bash
+
+source /vagrant/provision/helper.sh
+
 echo
 echo "###################################################################"
 echo
@@ -6,14 +9,7 @@ echo "Installing xorg, qtile and sddm"
 echo
 USER_PERMISSIONS="mike:mike"
 
-function createDirIfNotExist() {
-	if [[ $# -ne 1 ]]; then
-		echo "Provide the name of the directory" >&2
-		exit 1
-	fi
 
-	[[ -d $1 ]] || mkdir $1
-}
 
 function downloadNerdFont() {
 
@@ -46,10 +42,16 @@ pacman -R --noconfirm virtualbox-guest-utils-nox 2>/dev/null
 
 packages=(
   alacritty
-  autorandr
+  dex
+  # imageviewer
+  feh
+  mypy
   neofetch
+  # polkit authentication agent is required for archlinux-logout app
+  polkit
   qtile
   sddm
+  starship
   sxhkd
   ttf-dejavu
   unzip
@@ -61,8 +63,10 @@ packages=(
 )
 
 aur_packages=(
-  sddm-theme-tokyo-night
   archlinux-logout-git
+  arcolinux-wallpapers-git
+  qtile-extras
+  sddm-theme-tokyo-night
 )
 echo -e "\n###################################################################"
 echo "Installing packages"
@@ -70,7 +74,16 @@ echo "Installing packages"
 
 echo -e "\n###################################################################"
 echo "Installing aur packages"
+# trust the gpg key of the qtile-extras provider
+gpg --homedir /etc/pacman.d/gnupg/ --recv-keys 58A9AA7C86727DF7
 pikaur -S --noconfirm --needed "${aur_packages[@]}"
+
+#
+# Virtualbox Guest Additions 
+# see: https://wiki.archlinux.org/title/VirtualBox/Install_Arch_Linux_as_a_guest
+#
+usr/bin/systemctl enable vboxservice
+
 
 
 #
@@ -137,10 +150,7 @@ if [[ ! -d $ROFI_CONFIG_DIR ]]; then
 	rofi -dump-config > $ROFI_CONFIG_DIR/config.rasi
 	chown -R $USER_PERMISSIONS $ROFI_CONFIG_DIR
 fi
+sed -i -z "s/#de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/" /etc/locale.gen
+locale-gen
 
-
-#
-# Browser
-#
-/usr/bin/pikaur -Syu --noconfirm --needed google-chrome noto-fonts-emoji
 
