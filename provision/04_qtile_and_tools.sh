@@ -42,11 +42,14 @@ pacman -R --noconfirm virtualbox-guest-utils-nox 2>/dev/null
 
 packages=(
   alacritty
+  btop
   dex
   # imageviewer
   feh
   mypy
   neofetch
+  # picom as a compositor for qtile
+  picom
   # polkit authentication agent is required for archlinux-logout app
   polkit
   qtile
