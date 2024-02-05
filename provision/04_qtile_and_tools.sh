@@ -101,7 +101,6 @@ createDirIfNotExist $SDDM_CONF_DIR
 
 # only set the new SDDM them if the conf-file has not yet been created
 if [[ ! -f $SDDM_CONF_DIR/custom.conf ]]; then
-  $SDDM_CONF_DIR/custom.conf
   echo "[Theme]" > $SDDM_CONF_DIR/custom.conf
   echo "Current=tokyo-night-sddm" >> $SDDM_CONF_DIR/custom.conf
   

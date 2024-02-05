@@ -18,6 +18,7 @@ packages=(
   libappindicator-gtk3
   keepassxc
   # libreoffice-still
+  nvm
   task
 )
 

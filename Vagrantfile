@@ -14,11 +14,6 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "archlinux/archlinux"
 
-  # This might be activated after the first run. The public key will be copied during 
-  # the provision of the base packages.
-  # config.ssh.private_key_path = "vagrant-ssh/id_rsa"												   
-  
-  
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
@@ -56,9 +51,10 @@ Vagrant.configure("2") do |config|
   # If you use this you may want to enable additional shared subfolders as
   # shown above.
   # config.vm.synced_folder ".", "/vagrant", disabled: true
-
+  # config.vm.synced_folder "C:/Projekte", "/hostsystem", owner: "vagrant", group: "sys"
+  
   # Increase the size of the primary disk
-  config.vm.disk :disk, size: "48GB", primary: true
+  config.vm.disk :disk, size: "80GB", primary: true
   
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -69,8 +65,8 @@ Vagrant.configure("2") do |config|
     vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-    vb.memory = "15000"
-	vb.cpus = 2
+    vb.memory = "40000"
+	vb.cpus = 8
     vb.name = "ArchDev"		
 
 	vb.customize ["modifyvm", :id, "--monitorcount", 2]
@@ -81,7 +77,9 @@ Vagrant.configure("2") do |config|
 	vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
 	vb.customize ["modifyvm", :id, "--drag-and-drop", "bidirectional"]
 
-	vb.customize ["modifyvm", :id, "--natnet1", "10.10.0/24"]											
+	vb.customize ["modifyvm", :id, "--natnet1", "10.10.0/24"]
+
+	vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 1, "--device", 0, "--type", "hdd", "--medium", "C:/VMs/VM-Drive/new_projects.vdi"]	
   end
   #
   # View the documentation for the provider you are using for more

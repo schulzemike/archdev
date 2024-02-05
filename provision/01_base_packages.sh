@@ -1,20 +1,6 @@
 #!/bin/bash
 
 source /vagrant/provision/helper.sh
-echo
-echo
-echo "#######################################################################"
-echo "Adding public key for future ssh access"
-echo 
-
-createDirIfNotExist /home/vagrant/.ssh
-cp /vagrant/vagrant-ssh/authorized_keys /home/vagrant/.ssh
-cp /vagrant/vagrant-ssh/id_rsa.pub /home/vagrant/.ssh
-chown vagrant:vagrant /home/vagrant/.ssh/id_rsa.pub
-chmod 644 /home/vagrant/.ssh/id_rsa.pub
-
-echo "public ssh key added"
-
 
 packages=(
   base-devel
@@ -65,8 +51,11 @@ fi
 echo
 echo
 echo "#######################################################################"
-echo "Updating system..."
+echo "Reseting all keys and update the system..."
 echo
+rm -r /etc/pacman.d/gnupg
+pacman-key --init
+pacman-key --populate
 pacman -Sy --noconfirm archlinux-keyring && pacman -Su --noconfirm
 if [ $? == 1 ]; then
   echo "An error occured while updating the keyring or during the system update"

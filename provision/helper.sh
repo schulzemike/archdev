@@ -7,5 +7,5 @@ function createDirIfNotExist() {
 		exit 1
 	fi
 
-	[[ -d $1 ]] || mkdir $1
+	[[ -d $1 ]] || mkdir -p $1
 }
