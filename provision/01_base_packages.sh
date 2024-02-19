@@ -10,6 +10,7 @@ packages=(
   neovim
   pkgfile
   procps-ng
+  reflector
 )
 
 
@@ -71,3 +72,10 @@ echo "Installing base packages ..."
 echo
 sudo pacman -S --noconfirm --needed "${packages[@]}"
 echo "base packages have been installed."
+
+echo
+echo
+echo "#######################################################################"
+echo "Enabling reflector service ..."
+echo
+/usr/bin/systemctl enable reflector

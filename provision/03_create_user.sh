@@ -34,6 +34,9 @@ else
 	chown -R $USER_NAME:$USER_NAME $HOME_DIR/.ssh
 	chmod 700 $HOME_DIR/.ssh
 	
+	mkdir $HOME_DIR/projekte
+	chown -R $USER_NAME:$USER_NAME $HOME_DIR/projekte
+	
 	echo "Finished creating user: $USER_NAME"
 fi 
 

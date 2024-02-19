@@ -63,6 +63,7 @@ packages=(
   xclip
   xorg-apps
   xorg-server
+  zip
 )
 
 aur_packages=(
