@@ -8,9 +8,17 @@ packages=(
   man-db
   man-pages
   neovim
+  net-tools
   pkgfile
   procps-ng
   reflector
+)
+
+packages_for_taskwiki=(
+  python-packaging
+  python-pynvim
+  python-six
+  python-tasklib
 )
 
 
@@ -72,6 +80,14 @@ echo "Installing base packages ..."
 echo
 sudo pacman -S --noconfirm --needed "${packages[@]}"
 echo "base packages have been installed."
+
+echo
+echo
+echo "#######################################################################"
+echo "Installing taskwiki packages ..."
+echo
+sudo pacman -S --noconfirm --needed "${packages_for_taskwiki[@]}"
+echo "taskwiki packages have been installed."
 
 echo
 echo

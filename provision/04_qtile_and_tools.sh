@@ -42,6 +42,7 @@ pacman -R --noconfirm virtualbox-guest-utils-nox 2>/dev/null
 
 packages=(
   alacritty
+  alsa-utils
   btop
   dex
   # imageviewer
@@ -156,4 +157,17 @@ fi
 sed -i -z "s/#de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/" /etc/locale.gen
 locale-gen
 
+# 
+# Set the XDG environment variables
+# Hint: putting EOT in quotes prevents the variable evaluation, which is
+#       what we want here
+#
+cat <<'EOT' > /etc/profile.d/0000-xdg-dirs.sh
+#!/bin/sh
+
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+EOT
 

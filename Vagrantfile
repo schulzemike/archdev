@@ -52,6 +52,7 @@ Vagrant.configure("2") do |config|
   # shown above.
   # config.vm.synced_folder ".", "/vagrant", disabled: true
   # config.vm.synced_folder "C:/Projekte", "/hostsystem", owner: "vagrant", group: "sys"
+  config.vm.synced_folder "../../Users/mischulze/OneDrive\ -\ adesso\ Group/Projekte", "/hostsystem", owner: "vagrant", group: "sys"
   
   # Increase the size of the primary disk
   config.vm.disk :disk, size: "80GB", primary: true
@@ -77,6 +78,10 @@ Vagrant.configure("2") do |config|
 	vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
 	vb.customize ["modifyvm", :id, "--drag-and-drop", "bidirectional"]
 
+	vb.customize ["modifyvm", :id, "--audio-enabled", "on"]
+	vb.customize ["modifyvm", :id, "--audio-driver", "dsound"]
+	vb.customize ["modifyvm", :id, "--audio-out", "on"]
+	
 	vb.customize ["modifyvm", :id, "--natnet1", "10.10.0/24"]
 
 	vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 1, "--device", 0, "--type", "hdd", "--medium", "C:/VMs/VM-Drive/new_projects.vdi"]	
@@ -100,6 +105,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "provision/05_tooling.sh"
   
   config.vm.provision "shell", inline: <<-SCRIPT
+echo
 echo "--------------------------------------------------"
 echo "--- machine has been successfully provisioned. ---"
 echo "--------------------------------------------------"  
